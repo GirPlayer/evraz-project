@@ -3,7 +3,7 @@
   <q-input v-model="coord" class="def-coor"rounded outlined label="Введите координаты дефектов" />
   <q-btn @click="getInp" class="scan-button" outline rounded color="primary" label="Сканировать" />
   <div class="relsa">
-    <div class="deffects" v-for="coord in coordM" :style="{ 'left' : `${ coord in coordM } px`}">
+    <div class="deffects" v-for="coord in coordM" :style="{ 'left' : `${ coord }px`}">
     </div>
 
     <div class="scan-line" :style="{ 'left' : `${ scanPos }px`}">
@@ -20,15 +20,22 @@ let coord = ref('')
 let scanPos = ref(0)
 let coordM = ref([])
 
+let w = window.innerWidth - 10
+
+
+
 function getInp() {
-  coordM = coord.value.split(' ')
+  coordM.value = coord.value.split(' ')
+  for (let i = 0; i < coordM.value.length; i++) {
+    coordM.value[i] = window.innerWidth * +coordM.value[i] / +l.value
+  }
+  console.log(coordM.value)
   if (l.value === ''){
     alert('Введите длину рельсы')
   }
   if (coord.value == ''){
     alert('Введите координаты дефектов')
   }
-  console.log(window.innerWidth)
 
   let interval = setInterval(() => {
     scanPos.value = scanPos.value + 10
@@ -38,6 +45,14 @@ function getInp() {
     }
   }, 400);
 
+  function findDeffect(){
+    if (coordM === ){
+      let finddef = alert('Найден дифект')
+      while (finddef != ok){
+        stop(getInp())
+      }
+    }
+  }
 }
 </script>
 
