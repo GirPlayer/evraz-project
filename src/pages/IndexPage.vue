@@ -8,7 +8,23 @@
 
     <div class="scan-line" :style="{ 'left' : `${ scanPos }px`}">
     </div>
+
+
   </div>
+
+  <ul>
+    <li v-for = '(coordsc, index) in coordScan'>
+      <div>
+        Шаг номер {{ index + 1}}: Позиция {{ coordsc.x }} см
+      </div>
+      <div>
+        Слева: {{ coordsc.left }}
+      </div>
+      <div>
+        Справа: {{ coordsc.right }}
+      </div>
+    </li>
+  </ul>
 
 </template>
 
@@ -19,6 +35,7 @@ let l = ref('')
 let coord = ref('')
 let scanPos = ref(0)
 let coordM = ref([])
+let coordScan = ref([])
 
 let w = window.innerWidth - 10
 
@@ -29,7 +46,6 @@ function getInp() {
   for (let i = 0; i < coordM.value.length; i++) {
     coordM.value[i] = window.innerWidth * +coordM.value[i] / +l.value
   }
-  console.log(coordM.value)
   if (l.value === ''){
     alert('Введите длину рельсы')
   }
@@ -38,7 +54,24 @@ function getInp() {
   }
 
   let interval = setInterval(() => {
-    scanPos.value = scanPos.value + 10
+    scanPos.value = scanPos.value + window.innerWidth * 10 / +l.value
+
+    let newCoord = {
+      x: scanPos.value,
+      left: "Зелёный свет (дефектов нет)",
+      right: "Зелёный свет (дефектов нет)",
+    }
+
+    console.log('11', coordM.value)
+    for (let coord of coordM.value) {
+      if (scanPos.value === +coord) {
+        newCoord.left = 'Красный свет (дефект есть)'
+        break
+      }
+    }
+
+    console.log(newCoord)
+    coordScan.value.push(newCoord)
 
     if (scanPos.value >= window.innerWidth - 10) {
       clearInterval(interval)
@@ -46,7 +79,7 @@ function getInp() {
   }, 400);
 
   function findDeffect(){
-    if (coordM === ){
+    if (coordM === 1){
       let finddef = alert('Найден дифект')
       while (finddef != ok){
         stop(getInp())
