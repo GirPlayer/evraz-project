@@ -2,6 +2,8 @@
   <q-input v-model="l" class="l-inp" rounded outlined label="Введите длину рельсы в см" />
   <q-input v-model="coord" class="def-coor"rounded outlined label="Введите координаты дефектов" />
   <q-btn @click="getInp" class="scan-button" outline rounded color="primary" label="Сканировать" />
+  <div class="redball">
+  </div>
   <div class="relsa">
     <div class="deffects" v-for="coord in coordM" :style="{ 'left' : `${ coord }px`}">
     </div>
@@ -15,7 +17,7 @@
   <ul>
     <li v-for = '(coordsc, index) in coordScan'>
       <div>
-        Шаг номер {{ index + 1}}: Позиция {{ coordsc.x }} см
+        Шаг номер {{ index + 1}}: Позиция {{ Perevod(coordsc) }} см
       </div>
       <div>
         Слева: {{ coordsc.left }}
@@ -39,9 +41,13 @@ let coordScan = ref([])
 
 let w = window.innerWidth - 10
 
-
+function Perevod(coordsc){
+  return coordsc.x * l.value / window.innerWidth
+}
 
 function getInp() {
+  coordScan.value = []
+  scanPos.value = 0
   coordM.value = coord.value.split(' ')
   for (let i = 0; i < coordM.value.length; i++) {
     coordM.value[i] = window.innerWidth * +coordM.value[i] / +l.value
@@ -62,7 +68,6 @@ function getInp() {
       right: "Зелёный свет (дефектов нет)",
     }
 
-    console.log('11', coordM.value)
     for (let coord of coordM.value) {
       if (scanPos.value === +coord) {
         newCoord.left = 'Красный свет (дефект есть)'
@@ -70,22 +75,12 @@ function getInp() {
       }
     }
 
-    console.log(newCoord)
     coordScan.value.push(newCoord)
 
     if (scanPos.value >= window.innerWidth - 10) {
       clearInterval(interval)
     }
   }, 400);
-
-  function findDeffect(){
-    if (coordM === 1){
-      let finddef = alert('Найден дифект')
-      while (finddef != ok){
-        stop(getInp())
-      }
-    }
-  }
 }
 </script>
 
@@ -125,5 +120,12 @@ function getInp() {
   background: lawngreen;
   border-radius: 50%;
   position: absolute;
+}
+
+.redball{
+  width: 20px;
+  height: 20px;
+  background: red;
+  border-radius: 50%;
 }
 </style>
