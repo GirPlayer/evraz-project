@@ -1,21 +1,13 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+    <q-header elevated style="background: #fff">
+      <q-toolbar >
 
-        <q-toolbar-title>
-          Quasar App
+        <q-toolbar-title class="q">
+          <img class="img" src="~assets/Evraz_ru.svg.png">
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+<!--        <div>Quasar v{{ $q.version }}</div>-->
       </q-toolbar>
     </q-header>
 
@@ -82,3 +74,15 @@ function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>
+
+<style>
+.img{
+  width: 15%;
+  height: 15%;
+  margin-top: 10px;
+}
+
+.q{
+  background: white;
+}
+</style>

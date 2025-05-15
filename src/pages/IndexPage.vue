@@ -1,11 +1,16 @@
 <template>
-  <q-input v-model="l" class="l-inp" rounded outlined label="Введите длину рельсы в см" />
-  <q-input v-model="coord" class="def-coor"rounded outlined label="Введите координаты дефектов" />
-  <q-btn @click="getInp" class="scan-button" outline rounded color="primary" label="Сканировать" />
-  <div class="redball">
-  </div>
+  <h3>Поиск дефектов на рельсе</h3>
+  <p>Данная программа выявляет наличие дефектов на рельсе</p>
+  <p>Для поиска дефектов укажите длину рельсы (в см) и координаты дефектов (например - 10 20 30)</p>
+  <q-input v-model="l" class="l-inp" color="deep-orange" rounded outlined label="Введите длину рельсы в см" />
+  <q-input v-model="coord" class="def-coor" color="deep-orange" rounded outlined label="Введите координаты дефектов" />
+  <q-btn @click="getInp" class="scan-button" outline rounded color="deep-orange" label="Сканировать" />
   <div class="relsa">
-    <div class="deffects" v-for="coord in coordM" :style="{ 'left' : `${ coord }px`}">
+    <div :class = "{ 'redball' : coordSc.left === 'Красный свет (дефект есть)', 'greenball': coordSc.left === 'Зелёный свет (дефектов нет)'}" v-for = 'coordSc in FoundDiffects' :style="{ 'left' : `${ coordSc.x - 10 }px`}" >
+    </div>
+    <div :class = "{ 'redball' : coordSc.right === 'Красный свет (дефект есть)', 'greenball': coordSc.right === 'Зелёный свет (дефектов нет)'}" v-for = 'coordSc in FoundDiffects' :style="{ 'left' : `${ coordSc.x + 10 }px`}" >
+    </div>
+    <div class="deffects" v-for = "coord in coordM" :style="{ 'left' : `${ coord }px`}">
     </div>
 
     <div class="scan-line" :style="{ 'left' : `${ scanPos }px`}">
@@ -38,11 +43,12 @@ let coord = ref('')
 let scanPos = ref(0)
 let coordM = ref([])
 let coordScan = ref([])
+let FoundDiffects = ref([])
 
-let w = window.innerWidth - 10
+let windowWidth = window.innerWidth - 25
 
 function Perevod(coordsc){
-  return coordsc.x * l.value / window.innerWidth
+  return coordsc.x * l.value / windowWidth
 }
 
 function getInp() {
@@ -50,7 +56,7 @@ function getInp() {
   scanPos.value = 0
   coordM.value = coord.value.split(' ')
   for (let i = 0; i < coordM.value.length; i++) {
-    coordM.value[i] = window.innerWidth * +coordM.value[i] / +l.value
+    coordM.value[i] = windowWidth * +coordM.value[i] / +l.value
   }
   if (l.value === ''){
     alert('Введите длину рельсы')
@@ -60,7 +66,7 @@ function getInp() {
   }
 
   let interval = setInterval(() => {
-    scanPos.value = scanPos.value + window.innerWidth * 10 / +l.value
+    scanPos.value = scanPos.value + windowWidth * 10 / +l.value
 
     let newCoord = {
       x: scanPos.value,
@@ -71,16 +77,17 @@ function getInp() {
     for (let coord of coordM.value) {
       if (scanPos.value === +coord) {
         newCoord.left = 'Красный свет (дефект есть)'
+        FoundDiffects.value.push(newCoord)
         break
       }
     }
 
     coordScan.value.push(newCoord)
 
-    if (scanPos.value >= window.innerWidth - 10) {
+    if (scanPos.value >= windowWidth - 10) {
       clearInterval(interval)
     }
-  }, 400);
+  }, 100);
 }
 </script>
 
@@ -97,6 +104,7 @@ function getInp() {
 
 .scan-button{
   margin: 20px;
+  margin-bottom: 50px;
 }
 
 .relsa{
@@ -127,5 +135,20 @@ function getInp() {
   height: 20px;
   background: red;
   border-radius: 50%;
+  position: absolute;
+  top: -20px;
+}
+
+.greenball{
+  width: 20px;
+  height: 20px;
+  background: green;
+  border-radius: 50%;
+  position: absolute;
+  top: -20px;
+}
+
+p{
+  margin-left: 5px;
 }
 </style>
