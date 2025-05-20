@@ -2,6 +2,9 @@
   <h3>Поиск дефектов на рельсе</h3>
   <p>Данная программа выявляет наличие дефектов на рельсе</p>
   <p>Для поиска дефектов укажите длину рельсы (в см) и координаты дефектов (например - 10 20 30)</p>
+  <p>Красный свет - дефект есть от 0 до 5 см</p>
+  <p>Жёлтый свет - дефект есть от 5 до 10 см</p>
+  <p>Зелёный свет - дефекта нет</p>
   <q-input v-model="l" class="l-inp" color="deep-orange" rounded outlined label="Введите длину рельсы в см" />
   <q-input v-model="coord" class="def-coor" color="deep-orange" rounded outlined label="Введите координаты дефектов" />
   <q-btn @click="getInp" class="scan-button" outline rounded color="deep-orange" label="Сканировать" />
@@ -47,6 +50,8 @@ let FoundDiffects = ref([])
 
 let windowWidth = window.innerWidth - 25
 
+let tenSm = windowWidth * 10 / +l.value
+
 function Perevod(coordsc){
   return coordsc.x * l.value / windowWidth
 }
@@ -74,11 +79,25 @@ function getInp() {
       right: "Зелёный свет (дефектов нет)",
     }
 
+    // newCoord.left = 'Красный свет (дефект есть)'
+    // FoundDiffects.value.push(newCoord)
+    // break
+
     for (let coord of coordM.value) {
-      if (scanPos.value === +coord) {
-        newCoord.left = 'Красный свет (дефект есть)'
-        FoundDiffects.value.push(newCoord)
-        break
+      console.log(scanPos.value, coord)
+      if (scanPos.value - tenSm <= +coord && +coord <= scanPos.value + tenSm) {
+        if (scanPos.value - tenSm/2 <= +coord){
+          newCoord.left = 'Красный свет (дефект 0 - 5)';
+        }
+        else if (scanPos.value - tenSm/2 >= +coord && +coord >= scanPos.value - tenSm) {
+          newCoord.left = 'Жёлтый свет(дефект 5 - 10)';
+        }
+        if (+coord <= scanPos.value + tenSm/2){
+          newCoord.right = 'Красный свет (дефект 0 - 5)'
+        }
+        else if (scanPos.value + tenSm/2 <= +coord && +coord <= scanPos.value + tenSm){
+          newCoord.right = 'Жёлтый свет (дефект 5 - 10)'
+        }
       }
     }
 
@@ -87,7 +106,7 @@ function getInp() {
     if (scanPos.value >= windowWidth - 10) {
       clearInterval(interval)
     }
-  }, 100);
+  }, 400);
 }
 </script>
 
