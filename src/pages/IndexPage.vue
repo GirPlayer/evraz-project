@@ -50,13 +50,13 @@ let FoundDiffects = ref([])
 
 let windowWidth = window.innerWidth - 25
 
-let tenSm = windowWidth * 10 / +l.value
-
 function Perevod(coordsc){
   return coordsc.x * l.value / windowWidth
 }
 
 function getInp() {
+  let tenSm = windowWidth * 10 / +l.value
+
   coordScan.value = []
   scanPos.value = 0
   coordM.value = coord.value.split(' ')
@@ -84,21 +84,36 @@ function getInp() {
     // break
 
     for (let coord of coordM.value) {
-      console.log(scanPos.value, coord)
-      if (scanPos.value - tenSm <= +coord && +coord <= scanPos.value + tenSm) {
-        if (scanPos.value - tenSm/2 <= +coord){
+      // if (scanPos.value - tenSm <= +coord && +coord <= scanPos.value + tenSm) {
+      //   if (scanPos.value - tenSm/2 <= +coord){
+      //     newCoord.left = 'Красный свет (дефект 0 - 5)';
+      //   }
+      //   else if (scanPos.value - tenSm/2 >= +coord && +coord >= scanPos.value - tenSm) {
+      //     newCoord.left = 'Жёлтый свет(дефект 5 - 10)';
+      //   }
+      //   if (+coord <= scanPos.value + tenSm/2){
+      //     newCoord.right = 'Красный свет (дефект 0 - 5)'
+      //   }
+      //   else if (scanPos.value + tenSm/2 <= +coord && +coord <= scanPos.value + tenSm){
+      //     newCoord.right = 'Жёлтый свет (дефект 5 - 10)'
+      //   }
+      // }
+        const distance = Math.abs(scanPos.value - coord);
+
+        if (distance <= tenSm/2) {
           newCoord.left = 'Красный свет (дефект 0 - 5)';
+          break
         }
-        else if (scanPos.value - tenSm/2 >= +coord && +coord >= scanPos.value - tenSm) {
-          newCoord.left = 'Жёлтый свет(дефект 5 - 10)';
+        else if (distance > tenSm/2 && distance <= tenSm) {
+          newCoord.left = 'Жёлтый свет (дефект 5 - 10)';
         }
-        if (+coord <= scanPos.value + tenSm/2){
-          newCoord.right = 'Красный свет (дефект 0 - 5)'
+
+        if (distance <= tenSm/2) {
+          newCoord.right = 'Красный свет (дефект 0 - 5)';
         }
-        else if (scanPos.value + tenSm/2 <= +coord && +coord <= scanPos.value + tenSm){
-          newCoord.right = 'Жёлтый свет (дефект 5 - 10)'
+        else if (distance > tenSm/2 && distance <= tenSm) {
+          newCoord.right = 'Жёлтый свет (дефект 5 - 10)';
         }
-      }
     }
 
     coordScan.value.push(newCoord)
