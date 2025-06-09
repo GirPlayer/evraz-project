@@ -80,8 +80,7 @@ function getInp() {
       right: "Зелёный свет (дефектов нет)",
     }
 
-    newCoord.left = 'Красный свет (дефект 0 - 5)'
-    FoundDiffects.value.push(newCoord)
+
 
     for (let coord of coordM.value) {
       // if (scanPos.value - tenSm <= +coord && +coord <= scanPos.value + tenSm) {
@@ -98,22 +97,24 @@ function getInp() {
       //     newCoord.right = 'Жёлтый свет (дефект 5 - 10)'
       //   }
       // }
-          const distance = Math.abs(scanPos.value - coord);
 
-          if (distance <= tenSm/2) {
-            newCoord.left = 'Красный свет (дефект 0 - 5)';
-            break
+          const distance = scanPos.value - coord;
+          const side = distance > 0 ? 'left' : 'right';
+          const distanceAbs = Math.abs(distance);
+
+          if (distanceAbs <= tenSm/2) {
+            newCoord[side] = 'Красный свет (дефект 0 - 5)';
           }
-          else if (distance > tenSm/2 && distance <= tenSm) {
-            newCoord.left = 'Жёлтый свет (дефект 5 - 10)';
+          else if (distanceAbs > tenSm/2 && distanceAbs <= tenSm) {
+            newCoord[side] = 'Жёлтый свет (дефект 5 - 10)';
           }
 
-          if (distance <= tenSm/2) {
-            newCoord.right = 'Красный свет (дефект 0 - 5)';
-          }
-          else if (distance > tenSm/2 && distance <= tenSm) {
-            newCoord.right = 'Жёлтый свет (дефект 5 - 10)';
-          }
+          // if (distance <= tenSm/2) {
+          //   newCoord.right = 'Красный свет (дефект 0 - 5)';
+          // }
+          // else if (distance > tenSm/2 && distance <= tenSm) {
+          //   newCoord.right = 'Жёлтый свет (дефект 5 - 10)';
+          // }
     }
 
     coordScan.value.push(newCoord)
