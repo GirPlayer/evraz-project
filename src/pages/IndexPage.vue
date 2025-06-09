@@ -72,7 +72,7 @@ function getInp() {
   }
 
   let interval = setInterval(() => {
-    scanPos.value = scanPos.value + windowWidth * 1 / +l.value
+    scanPos.value = scanPos.value + windowWidth * 10 / +l.value
 
     let newCoord = {
       x: scanPos.value,
@@ -121,7 +121,7 @@ function getInp() {
     if (scanPos.value >= windowWidth - 10) {
       clearInterval(interval)
     }
-  }, 200);
+  }, 400);
 }
 </script>
 
