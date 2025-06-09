@@ -9,18 +9,17 @@
   <q-input v-model="coord" class="def-coor" color="deep-orange" rounded outlined label="Введите координаты дефектов" />
   <q-btn @click="getInp" class="scan-button" outline rounded color="deep-orange" label="Сканировать" />
   <div class="relsa">
-    <div :class = "{ 'redball' : coordSc.left === 'Красный свет (дефект есть)', 'greenball': coordSc.left === 'Зелёный свет (дефектов нет)'}" v-for = 'coordSc in FoundDiffects' :style="{ 'left' : `${ coordSc.x - 10 }px`}" >
-    </div>
-    <div :class = "{ 'redball' : coordSc.right === 'Красный свет (дефект есть)', 'greenball': coordSc.right === 'Зелёный свет (дефектов нет)'}" v-for = 'coordSc in FoundDiffects' :style="{ 'left' : `${ coordSc.x + 10 }px`}" >
-    </div>
+<!--    <div :class = "{ 'redball' : coordSc.left === 'Красный свет (дефект 0 - 5)', 'greenball': coordSc.left === 'Зелёный свет (дефектов нет)', 'yellowball': coordSc.left === 'Жёлтый свет (дефект 5 - 10)'}" v-for = 'coordSc in FoundDiffects' :style="{ 'left' : `${ coordSc.x - 10 }px`}" >-->
+<!--    </div>-->
+<!--    <div :class = "{ 'redball' : coordSc.right === 'Красный свет (дефект 0 - 5)', 'greenball': coordSc.right === 'Зелёный свет (дефектов нет)', 'yellowball': coordSc.right === 'Жёлтый свет (дефект 5 - 10)'}" v-for = 'coordSc in FoundDiffects' :style="{ 'left' : `${ coordSc.x + 10 }px`}" >-->
+<!--    </div>-->
     <div class="deffects" v-for = "coord in coordM" :style="{ 'left' : `${ coord }px`}">
     </div>
 
     <div class="scan-line" :style="{ 'left' : `${ scanPos }px`}">
     </div>
-
-
   </div>
+
 
   <ul>
     <li v-for = '(coordsc, index) in coordScan'>
@@ -28,10 +27,12 @@
         Шаг номер {{ index + 1}}: Позиция {{ Perevod(coordsc) }} см
       </div>
       <div>
-        Слева: {{ coordsc.left }}
+        Слева: {{ coordsc.left }} <span :class = "{ 'redball' : coordsc.left === 'Красный свет (дефект 0 - 5)', 'greenball': coordsc.left === 'Зелёный свет (дефектов нет)', 'yellowball': coordsc.left === 'Жёлтый свет (дефект 5 - 10)'}" >
+      </span>
       </div>
       <div>
-        Справа: {{ coordsc.right }}
+        Справа: {{ coordsc.right }} <span :class = "{ 'redball' : coordsc.right === 'Красный свет (дефект 0 - 5)', 'greenball': coordsc.right === 'Зелёный свет (дефектов нет)', 'yellowball': coordsc.right === 'Жёлтый свет (дефект 5 - 10)'}" >
+      </span>
       </div>
     </li>
   </ul>
@@ -71,7 +72,7 @@ function getInp() {
   }
 
   let interval = setInterval(() => {
-    scanPos.value = scanPos.value + windowWidth * 10 / +l.value
+    scanPos.value = scanPos.value + windowWidth * 1 / +l.value
 
     let newCoord = {
       x: scanPos.value,
@@ -79,9 +80,8 @@ function getInp() {
       right: "Зелёный свет (дефектов нет)",
     }
 
-    // newCoord.left = 'Красный свет (дефект есть)'
-    // FoundDiffects.value.push(newCoord)
-    // break
+    newCoord.left = 'Красный свет (дефект 0 - 5)'
+    FoundDiffects.value.push(newCoord)
 
     for (let coord of coordM.value) {
       // if (scanPos.value - tenSm <= +coord && +coord <= scanPos.value + tenSm) {
@@ -98,22 +98,22 @@ function getInp() {
       //     newCoord.right = 'Жёлтый свет (дефект 5 - 10)'
       //   }
       // }
-        const distance = Math.abs(scanPos.value - coord);
+          const distance = Math.abs(scanPos.value - coord);
 
-        if (distance <= tenSm/2) {
-          newCoord.left = 'Красный свет (дефект 0 - 5)';
-          break
-        }
-        else if (distance > tenSm/2 && distance <= tenSm) {
-          newCoord.left = 'Жёлтый свет (дефект 5 - 10)';
-        }
+          if (distance <= tenSm/2) {
+            newCoord.left = 'Красный свет (дефект 0 - 5)';
+            break
+          }
+          else if (distance > tenSm/2 && distance <= tenSm) {
+            newCoord.left = 'Жёлтый свет (дефект 5 - 10)';
+          }
 
-        if (distance <= tenSm/2) {
-          newCoord.right = 'Красный свет (дефект 0 - 5)';
-        }
-        else if (distance > tenSm/2 && distance <= tenSm) {
-          newCoord.right = 'Жёлтый свет (дефект 5 - 10)';
-        }
+          if (distance <= tenSm/2) {
+            newCoord.right = 'Красный свет (дефект 0 - 5)';
+          }
+          else if (distance > tenSm/2 && distance <= tenSm) {
+            newCoord.right = 'Жёлтый свет (дефект 5 - 10)';
+          }
     }
 
     coordScan.value.push(newCoord)
@@ -121,7 +121,7 @@ function getInp() {
     if (scanPos.value >= windowWidth - 10) {
       clearInterval(interval)
     }
-  }, 400);
+  }, 200);
 }
 </script>
 
@@ -169,8 +169,7 @@ function getInp() {
   height: 20px;
   background: red;
   border-radius: 50%;
-  position: absolute;
-  top: -20px;
+  display: inline-block;
 }
 
 .greenball{
@@ -178,8 +177,15 @@ function getInp() {
   height: 20px;
   background: green;
   border-radius: 50%;
-  position: absolute;
-  top: -20px;
+  display: inline-block;
+}
+
+.yellowball{
+  width: 20px;
+  height: 20px;
+  background: yellow;
+  border-radius: 50%;
+  display: inline-block;
 }
 
 p{
