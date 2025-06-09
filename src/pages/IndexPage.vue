@@ -48,6 +48,7 @@ let scanPos = ref(0)
 let coordM = ref([])
 let coordScan = ref([])
 let FoundDiffects = ref([])
+let shag = ref(10)
 
 let windowWidth = window.innerWidth - 25
 
@@ -72,7 +73,7 @@ function getInp() {
   }
 
   let interval = setInterval(() => {
-    scanPos.value = scanPos.value + windowWidth * 10 / +l.value
+    scanPos.value = scanPos.value + windowWidth * shag.value / +l.value
 
     let newCoord = {
       x: scanPos.value,
@@ -104,9 +105,28 @@ function getInp() {
 
           if (distanceAbs <= tenSm/2) {
             newCoord[side] = 'Красный свет (дефект 0 - 5)';
+            if (side === 'left'){
+              shag.value = -1
+            }
+            else{
+              shag.value = 1
+            }
+            break
           }
           else if (distanceAbs > tenSm/2 && distanceAbs <= tenSm) {
             newCoord[side] = 'Жёлтый свет (дефект 5 - 10)';
+            if (side === 'left'){
+              shag.value = -5
+            }
+            else{
+              shag.value = 5
+            }
+            break
+          }
+          else if (distanceAbs === 0){
+            newCoord.left = 'Найден дефект'
+            newCoord.right = 'Найден дефект'
+            break
           }
 
           // if (distance <= tenSm/2) {
